@@ -9,6 +9,7 @@
 #include "object.h"
 #include "memory.h"
 #include "vm.h"
+#include "runtime.h"
 
 VM vm; // [one]
 static Value clockNative(int argCount, Value* args) {
@@ -54,6 +55,8 @@ void initVM() {
 
   initTable(&vm.globals);
   initTable(&vm.strings);
+
+  init_vm_runtime(&vm);
 
   defineNative("clock", clockNative);
 }
