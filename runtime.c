@@ -126,4 +126,12 @@ void init_vm_runtime(VM * vm){
   // to make sure it doesn't run while we're doing this
 
   init_vm_runtime_pair_fns(vm);
+
+  // add a built-in global variable DOUBLE_QUOTE to make up for the lack of
+  // escape sequences in lox strings (which are double quote deliminted)
+  // this is more of a minimalistic change compared to adding a
+  // native function that does decimal to string conversion (e.g. itoa() )
+  tableSet(&(vm->globals),
+	   copyString("DOUBLE_QUOTE", 12),
+	   OBJ_VAL(copyString("\"", 1)) );
 }
