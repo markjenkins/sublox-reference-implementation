@@ -17,7 +17,7 @@ typedef struct {
   ValueType type;
   union {
     bool boolean;
-    double number;
+    long number;
     Obj* obj;
   } as; // [as]
 } Value;

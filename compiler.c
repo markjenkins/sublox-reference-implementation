@@ -342,7 +342,7 @@ static void grouping(bool canAssign) {
   consume(TOKEN_RIGHT_PAREN, "Expect ')' after expression.");
 }
 static void number(bool canAssign) {
-  double value = strtod(parser.previous.start, NULL);
+  long value = strtod(parser.previous.start, NULL);
   emitConstant(NUMBER_VAL(value));
 }
 static void or_(bool canAssign) {

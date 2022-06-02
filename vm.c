@@ -150,8 +150,8 @@ static InterpretResult run() {
         runtimeError("Operands must be numbers."); \
         return INTERPRET_RUNTIME_ERROR; \
       } \
-      double b = AS_NUMBER(pop()); \
-      double a = AS_NUMBER(pop()); \
+      long b = AS_NUMBER(pop()); \
+      long a = AS_NUMBER(pop()); \
       push(valueType(a op b)); \
     } while (false)
 
@@ -258,8 +258,8 @@ static InterpretResult run() {
         if (IS_STRING(peek(0)) && IS_STRING(peek(1))) {
           concatenate();
         } else if (IS_NUMBER(peek(0)) && IS_NUMBER(peek(1))) {
-          double b = AS_NUMBER(pop());
-          double a = AS_NUMBER(pop());
+          long b = AS_NUMBER(pop());
+          long a = AS_NUMBER(pop());
           push(NUMBER_VAL(a + b));
         } else {
           runtimeError(
