@@ -1,0 +1,8 @@
+// REQUIRE abs.lox
+
+// this only works on lox implementations that use integers instead of
+// floating point
+fun mod(a, b){
+    var quotiant = a/b;
+    return abs(a-(quotiant*b));
+}

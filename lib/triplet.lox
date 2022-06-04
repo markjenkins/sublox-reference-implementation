@@ -1,0 +1,17 @@
+fun triplet(one, two, three){
+    return pair(one, pair(two, three));
+}
+
+var triplet_first = pair_first;
+
+fun triplet_second(t){
+    // if there is compiler support for accessing attributes by, this is better 
+    // return t.second.first;
+    return pair_first(pair_second(t));
+}
+
+fun triplet_last(t){
+    // if there is compiler support for accessing attributes by, this is better 
+    // return t.second.second;
+    return pair_second(pair_second(t));
+}

@@ -1,0 +1,54 @@
+// REQUIRE triplet.lox
+// REQUIRE newline.lox
+// REQUIRE reverse.lox
+
+fun char_triplet(c, c_decimal, c_line_num){
+    return triplet(c, c_decimal, c_line_num);
+}
+
+var char_triplet_str = triplet_first;
+
+fun char_triplet_decimal(c_triplet){
+    return triplet_second(c_triplet);
+}
+
+fun char_triplet_line_num(c_triplet){
+    return triplet_third(c_triplet);
+}
+
+fun char_triplet_is_whitespace(c_triplet){
+    c_decimal = char_triplet_decimal(c_triplet);
+    // ascii table (decimal)
+    // 9  horizontal tab
+    // 10 line feed
+    // 11 vertical tab
+    // 12 form feed
+    // 13 carriage return
+    // 32 space
+    return ( (c_decimal>= 9 and c_decimal<= 13) or 
+    	     c_decimal == 32 );
+}
+
+// returns a triplet containing
+// * the c_triplets accumulated
+// * the string accumulated
+// * the remaining chars or nil if they were all exhausted
+fun concatenate_chars_until_newline(chars){
+    var str_accum = "";
+    var triplet_accum = nil;
+    var c_triplet;
+    var c_str;
+    while ( nil != chars ){
+	c_triplet = pair_first(chars);
+	c_str = char_triplet_str(c_triplet);
+	chars = pair_second(chars);
+	if (NEWLINE == c_str)
+	    return triplet(reverse(triplet_accum),
+			   str_accum,
+			   chars);
+	str_accum = str_accum + c_str;
+	triplet_accum = pair(c_triplet, triplet_accum);
+    }
+    // if we reached the end of input without finding a newline
+    return triplet(reverse(triplet_accum), str_accum, nil);
+}

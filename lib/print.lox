@@ -1,0 +1,4 @@
+fun print1(p){
+    print p;
+    print ";";
+}
