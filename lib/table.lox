@@ -1,0 +1,71 @@
+// REQUIRE pair.lox
+
+// implementation of a key/value table with pair lists
+// not an efficient method for larger tables
+// further comments are in set.lox where its the same situation
+
+// REQUIRE comppair.lox
+
+fun create_table(){
+    return nil;
+}
+
+fun add_table_entry(t, k, v){
+    return pair( pair(k, v), t);
+}
+
+fun start_table_iter(t){
+    return t;
+}
+
+fun table_iter_has_next(t_iter){
+    return nil != t_iter;
+}
+
+var table_iter_current = pair_first;
+var table_iter_next = pair_second;
+
+// I don't bother using start_table_iter, table_iter_has_next,
+// table_iter_current, and table_iter_next because this is internal to
+// table.lox where it's known that these tables are formed with lists of
+// pair()
+fun find_table_entry_pair(t, k, comppair){
+    var current_pair;
+    var equality = comp_pair_eq(comppair);
+    while( nil != t ){
+	current_pair = pair_first(t);
+	if ( equality( pair_first(current_pair), k))
+	    return current_pair;
+	t = pair_second(t);
+    }
+    return nil; // if matching table entry not found
+}
+
+fun find_table_entry_value(t, k, comppair){
+    return pair_second( find_table_entry_pair(t, k, comppair) );
+}
+
+// I don't bother using start_table_iter, table_iter_has_next,
+// table_iter_current, and table_iter_next because this is internal to
+// table.lox where it's known that these tables are formed with lists of
+// pair()
+// as a side effect this reverses the order of the table entries
+fun remove_entry_from_table(t, k, comppair){
+    var return_t = nil;
+    var current_pair;
+    while( t!=nil ){
+	current_pair = pair_first(t);
+	// include the current pair in the output table as long as it
+	// doesn't have a matching key
+	if ( pair_first(current_pair) != k )
+	    return_t = pair(current_pair, return_t);
+	t = pair_second(t);
+    }
+    return return_t;
+}
+
+// has the side-effect of changing the order of table entries
+fun update_table_entry(t, k, value, comppair){
+    t = remove_entry_from_table(t, k, comppair);
+    return add_table_entry(t, k, value);
+}

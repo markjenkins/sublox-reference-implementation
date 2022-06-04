@@ -1,0 +1,6 @@
+// REQUIRE pair.lox
+
+var comp_pair_eq = pair_first;
+var comp_pair_lt = pair_second;
+
+var form_comp_pair = pair;

@@ -1,0 +1,60 @@
+// this is not an efficient implementation, checking for set membership
+// does not need to be a O(n) operation (going through all existing members)
+//
+// using just pair(), something like a red black tree would make sense,
+// this is why set_add and set_union take a pair of comparison functions
+// (eq and lt), because at some point making use of lt as well may make sense
+//
+// other better performing options would to use a built-in hash table type
+// or a built-in vector type, built-in hash function (output int) for
+// strings and a built-in function for modular arithmatic to implement
+// a hash table in lox from those primitives 
+
+// depends on
+// REQUIRE pair.lox
+// REQUIRE comppair.lox
+// REQUIRE list.lox
+
+fun create_set(){
+    return nil;
+}
+
+fun is_set_member(s, member, comppair){
+    var comp_eq = comp_pair_eq(comppair);
+    var current = s;
+    while ( nil != current ){
+	if( comp_eq( pair_first(current), member) )
+	    return true;
+	current = pair_second(current);
+    }
+    return false;
+}
+
+fun set_add(s, new_set_member, comppair){
+    if( is_set_member(s, new_set_member, comppair) )
+	return s;
+    return pair(new_set_member, s);
+}
+
+fun set_union(s1, s2, comppair){
+    // no work to do if either set is nil (empty), just use the other one
+    if (nil==s1)
+	return s2;
+    // for clarity, technically not needed as the loop below would be fine
+    if (nil==s2)
+	return s1;
+
+    // start with empty set okay, first call to set_member will be false
+    var combined_set = s1;
+    var current = s2;
+    while (nil!=current){
+	combined_set = set_add(combined_set, pair_first(current), comppair);
+	current = pair_second(current);
+    }
+
+    return combined_set;
+}
+
+fun set_len(s){
+    return list_len(s);
+}

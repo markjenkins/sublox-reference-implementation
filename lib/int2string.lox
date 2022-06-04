@@ -1,0 +1,55 @@
+// REQUIRE modarith.lox
+
+fun zerotonine2string(i){
+    // binary search for performance
+    if(i<5) {
+	if(i<2){
+	    if(i==0)
+		return "0";
+	    if(i==1)
+		return "1";
+	}
+	else { // <5 and >=2
+	    if(i==2)
+		return "2";
+	    else { // <5 and >2
+		if(i==3)
+		    return "3";
+		if(i==4)
+		    return "4";
+	    }
+	}
+    }
+    else { // >= 5
+	if(i<7){
+	    if(i==5)
+		return "5";
+	    if(i==6)
+		return "6";
+	}
+	else { // >= 7
+	    if(i==7)
+		return "7";
+	    else { // > 7
+		if(i==8)
+		    return "8";
+		if(i==9)
+		    return "9";
+	    }
+	}
+    }
+
+    // if all tests for exactly 0-9 fail
+    print "zerotonine2string(i) recieved i that was not 0<=i<10";
+    return nil;
+}
+
+// this only works on lox implementations that use int instead of float
+fun int2string(i){
+    var accum = "";
+    while(0!=i){
+	accum = zerotonine2string(mod(i, 10)) + accum;
+	i = i / 10;
+    }
+    return accum;
+}

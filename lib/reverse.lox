@@ -1,0 +1,13 @@
+// REQUIRE pair.lox
+
+fun reverse(l){
+    var accum = nil;
+    var l_pair = pair; // faster local reference
+    var l_pair_first = pair_first; // faster local reference
+    var l_pair_second = pair_second; // faster local reference
+    while (nil!=l){
+	accum = l_pair(l_pair_first(l), accum);
+	l = l_pair_second(l);
+    }
+    return accum;
+}

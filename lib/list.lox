@@ -1,0 +1,101 @@
+// REQUIRE pair.lox
+// REQUIRE print.lox
+
+fun list_len(l){
+    var count = 0;
+    while(nil!=l){
+	count = count+1;
+	l = pair_second(l);
+    }
+    return count;
+}
+
+fun list_1(el){
+    return pair(el, nil);
+}
+
+fun list_2(one, two){
+    return pair(one, list_1(two));
+}
+
+fun list_3(one, two, three){
+    return pair(one, list_2(two, three));
+}
+
+fun list_4(one, two, three, four){
+    return pair(one, list_3(two, three, four));
+}
+
+fun list_5(one, two, three, four, five){
+    return pair(one, list_4(two, three, four, five));
+}
+
+fun list_6(one, two, three, four, five, six){
+    return pair(one, list_5(two, three, four, five, six));
+}
+
+fun list_7(one, two, three, four, five, six, seven){
+    return pair(one, list_6(two, three, four, five, six, seven));
+}
+
+fun list_8(one, two, three, four, five, six, seven, eight){
+    return pair(one, list_7(two, three, four, five, six, seven, eight));
+}
+
+fun list_9(one, two, three, four, five, six, seven, eight, nine){
+    return pair(one, list_8(two, three, four, five,
+                            six, seven, eight, nine));
+}
+
+fun list_foreach(l, f){
+    while(nil!=l){
+	f(pair_first(l));
+	l = pair_second(l);
+    }
+}
+
+fun list_print(l){
+    if (list_len(l)==0)
+	print "{empty list}";
+    else
+	list_foreach(l, print1);
+}
+
+fun str_list_print(l){
+    var accum = "";
+    var item;
+    if (nil==l)
+	print "{empty list}";
+    var sep = "";
+    while(nil!=l){
+	item = pair_first(l);
+	if(""==item)
+	    accum = accum + sep + "{empty string}";
+	else
+	    accum = accum + sep + item;
+	sep = " ";
+	l = pair_second(l);
+    }
+    print accum;
+}
+
+fun list_access_n(l, n){
+    var i = 0;
+    while(nil!=l){
+	if(i==n)
+	    return pair_first(l);
+	l = pair_second(l);
+	i = i + 1;
+    }
+    print "list_access_n failed due to list exhaution";
+    return nil;
+}
+
+fun prepend_list_to_list(l1, l2){
+    var new_list = l2;
+    while(nil!=l1){
+	new_list = pair(pair_first(l1), new_list);
+	l1 = pair_second(l1);
+    }
+    return new_list;
+}
