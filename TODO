@@ -1,0 +1,25 @@
+#1 TODO for the reference implementation of sublox1 and sublox2 is to support garbage collection. The feature needs to be back ported, in Nystrom's book it appears after the chapter on closures which sublox1 and sublox2 do not include. When doing this, one must be aware of introducing garbage collection bugs as Nystrom warns about in the book, particuarly the case where one object in progress is not tracked and a memory allocation causes a garbage collection and a a loss of that object. See the garbage collection chapter in the book.
+
+The limitation of 256 constants per function or global script is also a priority to address.
+
+At present, this limitation can be worked around by having a sufficient degree of functional decomposition.
+
+The I/O pre-processor script at
+https://gist.github.com/markjenkins/1a39e62537de9f08648aaf0c82e7d689
+operates on this principle and the fact that an unlimitted number of global functions can be defined when the closure feature is absent. (as a function declaration does result in a constant in the global script, only invocation of a global function does)
+
+A simple approach to support more constants, while keeping the performance benifit of short constants is planned. I would like to support the most common integers with additional opcodes, OP_ZERO, OP_ONE, and OP_INT for all of 0-255. A simple way to support more string constants would be to have a OP_UNCOMMON_CONSTANT with a multibyte operand.and to heuristically use it for longer strings that are less likely to be used frequently.
+
+Adding a built-in pair object type and native pair(), pair_first(), and pair_second() functions could also be a nice performance optimization. If sublox1 gets a more optimized version of these, we'll include it in sublox2 as well.
+
+An isinstance native function for testing if two values or objects are of the same type would also be handy, particulary for debugging.
+
+I would also like to see the repl improved to support multiple lines and the ability to dynamically request loading of a lox file by name into the repl environment.
+
+sublox2 could also benifit from some additional native functions and built-in object types
+ * a vector object type and related functions
+ * a hashtable object type using string for keys and all Lox values/objects as allowable values
+ * a wrapper around the c string comparison function 
+ 
+ Much of the underlying logic for vectors and string hashtables are already available internally in the sublox interpreter.
+ 
