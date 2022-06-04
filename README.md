@@ -42,4 +42,4 @@ Garbage collection is a feature that still needs to be back-ported. (it appeared
 
 There is also a sublox2 sub-variant with more features that is found in the sublox2 branch. A goal is to eventualy use the sublox1 sub-variant to build a compiler for the sublox2 variant that can be interpretted with https://github.com/markjenkins/lox_compiler_scheme . With a boostrappable sublox2, the full Lox features (and extensions) could also be added and in turn the full Lox language used to handle even more complicated boostrap tasks.
 
-A LALR(1) parser generator is currently in progress and being written with the sublox1 sub-variant. That project also include some generally useful libraries and a basic concatentation based module/dependency system.
+A LALR(1) parser generator is currently [in progress](https://gist.github.com/markjenkins/4229efe7fe36365ea8d5fd392bea33b8) and being written with the sublox1 sub-variant. That project also include some generally useful libraries and a basic concatentation based module/dependency system.
