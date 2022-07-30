@@ -471,6 +471,7 @@ static void block() {
   consume(TOKEN_RIGHT_BRACE, "Expect '}' after block.");
 }
 static void function(FunctionType type) {
+  Value ignore_me; // for global function hack below
   Compiler compiler;
   initCompiler(&compiler, type);
   beginScope(); // [no-end-scope]
@@ -491,13 +492,55 @@ static void function(FunctionType type) {
   block();
 
   ObjFunction* function = endCompiler();
-  emitBytes(OP_CONSTANT, makeConstant(OBJ_VAL(function)));
+  // functions declared in a local scope need to be loaded onto the stack
+  if (current->scopeDepth > 0) {
+    emitBytes(OP_CONSTANT, makeConstant(OBJ_VAL(function)));
+  }
+  // the original code did the above OP_CONSTANT regardless of global
+  // or local and for global variables the expectation was that
+  // funDeclaration() would pull off the stack with OP_DEFINE_GLOBAL
+  //
+  // this modification adds global functions direct to globals, but as a
+  // consequence, global functions can't be redefined and used by
+  // different parts of the global script. As such, attempts to redefine
+  // are caught to warn users they can't do that.
+  //
+  // as a fixme, we should check for a repl context, as redefining a function
+  // isn't as problematic there
+  else if (tableGet(&vm.globals, function->name, &ignore_me) ){
+    error("redefining global functions not allowed");
+  }
+  else {
+    tableSet(&vm.globals, function->name, OBJ_VAL(function));
+  }
 }
 static void funDeclaration() {
-  uint8_t global = parseVariable("Expect function name.");
+  // parseVariable ends up calling identifierConstant, which we
+  // don't want to do if we're discovering a global function
+  //uint8_t global = parseVariable("Expect function name.");
+  // parseVariable would do, that we do instead
+  consume(TOKEN_IDENTIFIER, "Expect function name.");
+  declareVariable(); // what parseVariable would do
+  // what parseVariable would do that we don't want to do for globals
+  // identifierConstant(&parser.previous);
+
   markInitialized();
+
+  // side effect, messes with vm.globals if function is global, but nothing else
+  // if local, OP_CONSTANT is emited to leave the function on the stack
   function(TYPE_FUNCTION);
-  defineVariable(global);
+  if (current->scopeDepth > 0){
+    // is this redundant with above markInitialized or does function()
+    // change the context?
+    markInitialized();
+    // previously defineVariable was called regardless of depth, which for
+    // a local var would call markInitialized() and then return
+    // for a global var, this would emmit a OP_DEFINE_GLOBAL opcode
+    // to reference the constant placed on the stack by function()
+    //
+    // but now, if we're in a global context
+    //defineVariable(global);
+  }
 }
 static void varDeclaration() {
   uint8_t global = parseVariable("Expect variable name.");
